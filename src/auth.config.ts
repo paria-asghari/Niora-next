@@ -4,6 +4,7 @@ export const authConfig: NextAuthConfig = {
   pages: {
     signIn: '/login',
   },
+  trustHost: true, // Allow all hosts in development and production
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user
