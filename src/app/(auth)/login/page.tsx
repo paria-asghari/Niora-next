@@ -1,15 +1,15 @@
 "use client"
 
 import Link from "next/link"
-import { useState } from "react"
+import { useState, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { signIn } from "next-auth/react"
 
-export default function LoginPage() {
+function LoginForm() {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
   const searchParams = useSearchParams()
-  
+
   const [error, setError] = useState(() => {
     const urlError = searchParams.get('error')
     if (urlError === 'CredentialsSignin') {
@@ -72,8 +72,8 @@ export default function LoginPage() {
         <div className="p-6">
           {error && (
             <div className={`mb-4 p-3 border rounded-lg text-sm ${
-              error.includes('successful') 
-                ? 'bg-green-50 border-green-200 text-green-600' 
+              error.includes('successful')
+                ? 'bg-green-50 border-green-200 text-green-600'
                 : 'bg-red-50 border-red-200 text-red-600'
             }`}>
               {error}
@@ -122,5 +122,17 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-rose-50 to-pink-50 flex items-center justify-center p-4">
+        <div className="text-gray-600">در حال بارگذاری...</div>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   )
 }
