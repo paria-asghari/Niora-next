@@ -5,7 +5,7 @@ import * as db from '@/lib/db'
 // PUT /api/cycles/[id] - Update cycle
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth()
@@ -14,7 +14,8 @@ export async function PUT(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const cycleId = Number(params.id)
+    const { id } = await params
+    const cycleId = Number(id)
     const body = await request.json()
     const { startDate, endDate, painLevel, symptoms, notes } = body
 
@@ -57,7 +58,7 @@ export async function PUT(
 // DELETE /api/cycles/[id] - Delete cycle
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth()
@@ -66,7 +67,8 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const cycleId = Number(params.id)
+    const { id } = await params
+    const cycleId = Number(id)
 
     const success = await db.deleteCycle(cycleId, Number(session.user.id))
 
